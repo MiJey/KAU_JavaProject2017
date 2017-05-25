@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <string name="app_name">오늘내일모레 할 일</string>
-    <string name="edit_message">거지같은 에뮬레이터</string>
-    <string name="button_send">+</string>
+    <string name="edit_message">내일까지 과제하기</string>
+    <string name="button_send">추가!</string>
 </resources>
