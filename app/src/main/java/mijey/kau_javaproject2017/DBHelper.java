@@ -12,7 +12,8 @@ public class DBHelper extends SQLiteOpenHelper{
 
     @Override
     public void onCreate(SQLiteDatabase db) {
-
+        //새로운 테이블 생성
+        db.execSQL("CREATE TABLE TODOLIST (_id INTEGER PRIMARY KEY AUTOINCREMENT, year INTEGER, date INTEGER, time INTEGER, memo TEXT);");
     }
 
     @Override
