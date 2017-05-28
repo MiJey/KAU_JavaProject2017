@@ -12,12 +12,20 @@ public class DBHelper extends SQLiteOpenHelper{
 
     @Override
     public void onCreate(SQLiteDatabase db) {
-        //새로운 테이블 생성
-        db.execSQL("CREATE TABLE TODOLIST (_id INTEGER PRIMARY KEY AUTOINCREMENT, year INTEGER, date INTEGER, time INTEGER, memo TEXT);");
+        //id    type    year    date    time    memo
+        //123   0       2017    0528    1925    작성중
+        db.execSQL("CREATE TABLE TODOLIST (_id INTEGER PRIMARY KEY AUTOINCREMENT, type INTEGER, year INTEGER, date INTEGER, time INTEGER, memo TEXT);");
     }
 
     @Override
     public void onUpgrade(SQLiteDatabase db, int oldVersion, int newVersion) {
 
+    }
+
+    public void insert(int type, int year, int date, int time, String memo){
+        SQLiteDatabase db = getWritableDatabase();
+        db.execSQL("INSERT INTO MONEYBOOK VALUES(null, '" + type + "', " + year + ", '" + date + ", '" + time + ", '" + memo +"');");
+        db.close();
+        //key값을 리턴해서 객체가 가지고 있는 것도 좋을듯
     }
 }

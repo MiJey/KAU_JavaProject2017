@@ -1,5 +1,6 @@
 package mijey.kau_javaproject2017;
 
+import android.database.Cursor;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.view.View;
@@ -11,22 +12,45 @@ import android.widget.ListView;
 public class MainActivity extends AppCompatActivity {
     public final static String EXTRA_MESSAGE = "mijey.kau_javaproject2017.MESSAGE";
 
-    private ListView todoListview;
-    private ArrayAdapter<String> todoAdapter;
+    private DBHelper dbHelper;
+    private ListView todoListView;
+    private ArrayAdapter<String> listAdapter;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
+        dbHelper = new DBHelper(getApplicationContext(), "TODOLIST.db", null, 1);
+
         // Android에서 제공하는 string 문자열 하나를 출력 가능한 layout으로 어댑터 생성
-        todoAdapter = new ArrayAdapter<>(getApplicationContext(), android.R.layout.simple_list_item_1);
+        listAdapter = new ArrayAdapter<>(getApplicationContext(), android.R.layout.simple_list_item_1);
 
         // Xml에서 추가한 ListView 연결
-        todoListview = (ListView) findViewById(R.id.todolist);
-        todoListview.setAdapter(todoAdapter);
-        todoListview.setOnItemClickListener(onClickListItem);
+        todoListView = (ListView) findViewById(R.id.todolist);
+        todoListView.setAdapter(listAdapter);
+        todoListView.setOnItemClickListener(onClickListItem);
 
+    }
+
+    private void readDB_setListView(){
+
+        Cursor c = dbHelper.rawQuery("SELECT * FROM TODOLIST", null);
+        DLog.e(TAG, "COUNT = " + mCursor.getCount());
+
+        while (mCursor.moveToNext()) {
+
+            mInfoClass = new InfoClass(
+                    mCursor.getInt(mCursor.getColumnIndex("_id")),
+                    mCursor.getString(mCursor.getColumnIndex("name")),
+                    mCursor.getString(mCursor.getColumnIndex("contact")),
+                    mCursor.getString(mCursor.getColumnIndex("email"))
+            );
+
+            mInfoArray.add(mInfoClass);
+        }
+
+        mCursor.close();
     }
 
     // 아이템 터치 이벤트
@@ -41,7 +65,7 @@ public class MainActivity extends AppCompatActivity {
     public void addTask(View view) {
         EditText editText = (EditText) findViewById(R.id.edit_message);
         String message = editText.getText().toString();
-        todoAdapter.add(message);
+        listAdapter.add(message);
         editText.setText("");
     }
 }
