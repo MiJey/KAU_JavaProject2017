@@ -16,7 +16,7 @@ public class DBHelper extends SQLiteOpenHelper {
         //id    type    year    date    time    memo
         //123   0       2017    0528    1925    작성중
         db.execSQL("CREATE TABLE TODOLIST (_id INTEGER PRIMARY KEY AUTOINCREMENT, type INTEGER, year INTEGER, date INTEGER, time INTEGER, memo TEXT);");
-        db.execSQL("INSERT INTO TODOLIST VALUES(null, 0, 2017, 0529, 1023, '자료구조 노잼');");
+        //db.execSQL("INSERT INTO TODOLIST VALUES(null, 0, 2017, 0529, 1023, '자료구조 노잼');");
     }
 
     @Override
@@ -39,7 +39,7 @@ public class DBHelper extends SQLiteOpenHelper {
 
     public void delete(int _id){
         SQLiteDatabase db = this.getWritableDatabase();
-        //db.execSQL("DELETE INTO TODOLIST VALUES(" + _id + ");");
+        //db.execSQL("DELETE FROM TODOLIST WHERE id='" + _id + "'");
         db.close();
     }
 }

@@ -19,11 +19,12 @@ public class MainActivity extends AppCompatActivity {
 
     private ListView todoList;
     private DBHelper dbHelper;
+    private DBAdapter dbAdapter;
     private SQLiteDatabase db;
     private String sql;
     private Cursor cursor;
 
-    private ArrayAdapter<String> listAdapter;
+    //private ArrayAdapter<String> listAdapter;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -40,6 +41,7 @@ public class MainActivity extends AppCompatActivity {
                 cursor.moveToPosition(position);
                 String str = cursor.getString(cursor.getColumnIndex("_id"));
                 Toast.makeText(getApplicationContext(), str, Toast.LENGTH_SHORT).show();
+                dbHelper.delete(cursor.getInt(cursor.getColumnIndex("_id")));
             }
         });
     }
@@ -50,7 +52,7 @@ public class MainActivity extends AppCompatActivity {
 
         if (cursor.getCount() > 0) {
             startManagingCursor(cursor);
-            DBAdapter dbAdapter = new DBAdapter(this, cursor);
+            dbAdapter = new DBAdapter(this, cursor);
             todoList.setAdapter(dbAdapter);
         }
     }
@@ -59,7 +61,9 @@ public class MainActivity extends AppCompatActivity {
         TextView tb = (TextView)findViewById(R.id.etMemo);
         String msg = tb.getText().toString();
         dbHelper.insert(0, 0, 0, 0, msg);
-
         tb.setText("");
+
+
+        dbAdapter.changeCursor(cursor);
     }
 }
