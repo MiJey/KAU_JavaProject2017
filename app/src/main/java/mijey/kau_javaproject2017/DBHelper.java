@@ -14,9 +14,9 @@ public class DBHelper extends SQLiteOpenHelper {
 
     @Override
     public void onCreate(SQLiteDatabase db) {
-        //id    type    year    date    time    memo
-        //123   0       2017    0528    1925    작성중
-        db.execSQL("CREATE TABLE TODOLIST (_id INTEGER PRIMARY KEY AUTOINCREMENT, type INTEGER, year INTEGER, date INTEGER, time INTEGER, memo TEXT);");
+        //id    type    date                memo
+        //123   0       '2017-05-30 00:59'  '메모메모'
+        db.execSQL("CREATE TABLE TODOLIST (_id INTEGER PRIMARY KEY AUTOINCREMENT, type INTEGER, date TEXT, memo TEXT);");
     }
 
     @Override

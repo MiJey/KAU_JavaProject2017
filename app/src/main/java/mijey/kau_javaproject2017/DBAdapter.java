@@ -23,7 +23,7 @@ public class DBAdapter extends CursorAdapter {
         TextView memo = (TextView)view.findViewById(R.id.listMemo);
 
         //DB에 있는 값을 이용해서 자연어로 바꿔줘야함
-        date.setText(cursor.getString(cursor.getColumnIndex("_id")));
+        date.setText(cursor.getString(cursor.getColumnIndex("date")) + "★");
         memo.setText(cursor.getString(cursor.getColumnIndex("memo")));
     }
 

@@ -1,25 +1,26 @@
 package mijey.kau_javaproject2017;
 
+import java.text.SimpleDateFormat;
+import java.util.Date;
+
 /**
  * Created by Yeji Moon on 2017-05-29.
  */
 
 //Natural Language Processing
 public class NLP {
-    private int type, year, date, time;
+    private int type;
+    private String date;
     private String memo;
 
     public NLP(String msg){
-        type = 0;
-        year = 0;
-        date = 0;
-        time = 0;
+        SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm", java.util.Locale.getDefault());
+        Date d = new Date(System.currentTimeMillis());
+        date = dateFormat.format(d);
         memo = msg;
     }
 
     public int getType(){return type;}
-    public int getYear(){return year;}
-    public int getDate(){return date;}
-    public int getTime(){return time;}
+    public String getDate(){return date;}
     public String getMemo(){return memo;}
 }

@@ -80,7 +80,7 @@ public class MainActivity extends AppCompatActivity {
     void readDB(){
         dbHelper = new DBHelper(getApplicationContext(), "TODOLIST.db", null, 1);
         db = dbHelper.getWritableDatabase();
-        cursor = db.rawQuery("SELECT * FROM TODOLIST", null);
+        cursor = db.rawQuery("SELECT * FROM TODOLIST ORDER BY date ASC", null);
         dbAdapter = new DBAdapter(this, cursor);
         todoList.setAdapter(dbAdapter);
     }
@@ -89,7 +89,7 @@ public class MainActivity extends AppCompatActivity {
         TextView tb = (TextView)findViewById(R.id.etMemo);
         NLP msg = new NLP(tb.getText().toString());
 
-        db.execSQL("INSERT INTO TODOLIST VALUES(null," + msg.getType() + ", " + msg.getYear() + ", " + msg.getDate() + ", " + msg.getTime() + ", '" + msg.getMemo() + "');");
+        db.execSQL("INSERT INTO TODOLIST VALUES(null, " + msg.getType() + ", '" + msg.getDate() + "', '" + msg.getMemo() +"');");
         cursor = db.rawQuery("SELECT * FROM TODOLIST", null);
         dbAdapter.changeCursor(cursor);
 
