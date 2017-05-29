@@ -9,12 +9,15 @@ import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.EditText;
 import android.widget.ListView;
+import android.widget.TextView;
+import android.widget.Toast;
+
+import java.util.List;
 
 public class MainActivity extends AppCompatActivity {
     public final static String EXTRA_MESSAGE = "mijey.kau_javaproject2017.MESSAGE";
 
-    private ListView todoListView;
-
+    private ListView todoList;
     private DBHelper dbHelper;
     private SQLiteDatabase db;
     private String sql;
@@ -27,45 +30,36 @@ public class MainActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
+        todoList = (ListView)findViewById(R.id.todolist);
         dbHelper = new DBHelper(getApplicationContext(), "TODOLIST.db", null, 1);
-        selectDB();
-        /*
-        // Android에서 제공하는 string 문자열 하나를 출력 가능한 layout으로 어댑터 생성
-        listAdapter = new ArrayAdapter<>(getApplicationContext(), android.R.layout.simple_list_item_1);
+        readDB();
 
-        // Xml에서 추가한 ListView 연결
-        todoListView = (ListView) findViewById(R.id.todolist);
-        todoListView.setAdapter(listAdapter);
-        todoListView.setOnItemClickListener(onClickListItem);
-        */
-
+        todoList.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+            @Override
+            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+                cursor.moveToPosition(position);
+                String str = cursor.getString(cursor.getColumnIndex("_id"));
+                Toast.makeText(getApplicationContext(), str, Toast.LENGTH_SHORT).show();
+            }
+        });
     }
 
-    private void selectDB() {
+    private void readDB() {
         db = dbHelper.getWritableDatabase();
-        sql = "SELECT * FROM TODOLIST;";
+        cursor = db.rawQuery("SELECT * FROM TODOLIST;", null);
 
-        cursor = db.rawQuery(sql, null);
         if (cursor.getCount() > 0) {
             startManagingCursor(cursor);
             DBAdapter dbAdapter = new DBAdapter(this, cursor);
-            todoListView.setAdapter(dbAdapter);
+            todoList.setAdapter(dbAdapter);
         }
     }
 
-        // 아이템 터치 이벤트
-    private AdapterView.OnItemClickListener onClickListItem = new AdapterView.OnItemClickListener() {
-
-        @Override
-        public void onItemClick(AdapterView<?> arg0, View arg1, int arg2, long arg3) {
-            // 이벤트 발생 시 해당 아이템 위치의 텍스트를 출력
-        }
-    };
-
     public void addTask(View view) {
-        EditText editText = (EditText) findViewById(R.id.edit_message);
-        String message = editText.getText().toString();
-        listAdapter.add(message);
-        editText.setText("");
+        TextView tb = (TextView)findViewById(R.id.etMemo);
+        String msg = tb.getText().toString();
+        dbHelper.insert(0, 0, 0, 0, msg);
+
+        tb.setText("");
     }
 }

@@ -22,7 +22,6 @@ public class DBAdapter extends CursorAdapter {
         LayoutInflater inflater = LayoutInflater.from(context);
         View v = inflater.inflate(R.layout.todolist_layout, parent, false);
         return v;
-
     }
 
     @Override
