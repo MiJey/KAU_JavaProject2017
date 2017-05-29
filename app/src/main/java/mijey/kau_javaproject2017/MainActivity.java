@@ -51,6 +51,11 @@ public class MainActivity extends AppCompatActivity {
                 cursor.moveToPosition(position);
                 String str = cursor.getString(cursor.getColumnIndex("_id"));
                 Toast.makeText(getApplicationContext(), str, Toast.LENGTH_SHORT).show();
+
+                db.execSQL("DELETE FROM TODOLIST WHERE _id = " + str);
+                cursor = db.rawQuery("SELECT * FROM TODOLIST", null);
+                dbAdapter.changeCursor(cursor);
+
                 return true;
             }
         });
