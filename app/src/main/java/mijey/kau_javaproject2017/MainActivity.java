@@ -1,6 +1,7 @@
 package mijey.kau_javaproject2017;
 
 import android.database.Cursor;
+import android.database.sqlite.SQLiteDatabase;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.view.View;
@@ -12,8 +13,13 @@ import android.widget.ListView;
 public class MainActivity extends AppCompatActivity {
     public final static String EXTRA_MESSAGE = "mijey.kau_javaproject2017.MESSAGE";
 
-    private DBHelper dbHelper;
     private ListView todoListView;
+
+    private DBHelper dbHelper;
+    private SQLiteDatabase db;
+    private String sql;
+    private Cursor cursor;
+
     private ArrayAdapter<String> listAdapter;
 
     @Override
@@ -22,7 +28,8 @@ public class MainActivity extends AppCompatActivity {
         setContentView(R.layout.activity_main);
 
         dbHelper = new DBHelper(getApplicationContext(), "TODOLIST.db", null, 1);
-
+        selectDB();
+        /*
         // Android에서 제공하는 string 문자열 하나를 출력 가능한 layout으로 어댑터 생성
         listAdapter = new ArrayAdapter<>(getApplicationContext(), android.R.layout.simple_list_item_1);
 
@@ -30,30 +37,23 @@ public class MainActivity extends AppCompatActivity {
         todoListView = (ListView) findViewById(R.id.todolist);
         todoListView.setAdapter(listAdapter);
         todoListView.setOnItemClickListener(onClickListItem);
+        */
 
     }
 
-    private void readDB_setListView(){
+    private void selectDB() {
+        db = dbHelper.getWritableDatabase();
+        sql = "SELECT * FROM TODOLIST;";
 
-        Cursor c = dbHelper.rawQuery("SELECT * FROM TODOLIST", null);
-        DLog.e(TAG, "COUNT = " + mCursor.getCount());
-
-        while (mCursor.moveToNext()) {
-
-            mInfoClass = new InfoClass(
-                    mCursor.getInt(mCursor.getColumnIndex("_id")),
-                    mCursor.getString(mCursor.getColumnIndex("name")),
-                    mCursor.getString(mCursor.getColumnIndex("contact")),
-                    mCursor.getString(mCursor.getColumnIndex("email"))
-            );
-
-            mInfoArray.add(mInfoClass);
+        cursor = db.rawQuery(sql, null);
+        if (cursor.getCount() > 0) {
+            startManagingCursor(cursor);
+            DBAdapter dbAdapter = new DBAdapter(this, cursor);
+            todoListView.setAdapter(dbAdapter);
         }
-
-        mCursor.close();
     }
 
-    // 아이템 터치 이벤트
+        // 아이템 터치 이벤트
     private AdapterView.OnItemClickListener onClickListItem = new AdapterView.OnItemClickListener() {
 
         @Override
