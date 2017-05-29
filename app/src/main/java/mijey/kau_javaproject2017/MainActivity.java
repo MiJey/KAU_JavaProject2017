@@ -15,16 +15,13 @@ import android.widget.Toast;
 import java.util.List;
 
 public class MainActivity extends AppCompatActivity {
-    public final static String EXTRA_MESSAGE = "mijey.kau_javaproject2017.MESSAGE";
+    //public final static String EXTRA_MESSAGE = "mijey.kau_javaproject2017.MESSAGE";
 
     private ListView todoList;
     private DBHelper dbHelper;
     private DBAdapter dbAdapter;
     private SQLiteDatabase db;
-    private String sql;
     private Cursor cursor;
-
-    //private ArrayAdapter<String> listAdapter;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -55,9 +52,9 @@ public class MainActivity extends AppCompatActivity {
 
     public void addTask(View view) {
         TextView tb = (TextView)findViewById(R.id.etMemo);
-        String msg = tb.getText().toString();
+        NLP msg = new NLP(tb.getText().toString());
 
-        db.execSQL("INSERT INTO TODOLIST VALUES (null, 0, 0, 0, 0, '" + msg + "');");
+        db.execSQL("INSERT INTO TODOLIST VALUES(null," + msg.getType() + ", " + msg.getYear() + ", " + msg.getDate() + ", " + msg.getTime() + ", '" + msg.getMemo() + "');");
         cursor = db.rawQuery("SELECT * FROM TODOLIST", null);
         dbAdapter.changeCursor(cursor);
 
