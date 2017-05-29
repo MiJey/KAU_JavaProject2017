@@ -18,18 +18,18 @@ public class DBAdapter extends CursorAdapter {
     }
 
     @Override
+    public void bindView(View view, Context context, Cursor cursor) {
+        TextView date = (TextView)view.findViewById(R.id.listDate);
+        TextView memo = (TextView)view.findViewById(R.id.listMemo);
+
+        date.setText(cursor.getString(cursor.getColumnIndex("_id")));
+        memo.setText(cursor.getString(cursor.getColumnIndex("memo")));
+    }
+
+    @Override
     public View newView(Context context, Cursor cursor, ViewGroup parent) {
         LayoutInflater inflater = LayoutInflater.from(context);
         View v = inflater.inflate(R.layout.todolist_layout, parent, false);
         return v;
-    }
-
-    @Override
-    public void bindView(View view, Context context, Cursor cursor) {
-        final TextView date = (TextView)view.findViewById(R.id.listDate);
-        final TextView memo = (TextView)view.findViewById(R.id.listMemo);
-
-        date.setText(cursor.getString(cursor.getColumnIndex("date")));
-        memo.setText(cursor.getString(cursor.getColumnIndex("memo")));
     }
 }

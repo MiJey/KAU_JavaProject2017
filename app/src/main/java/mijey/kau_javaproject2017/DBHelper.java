@@ -21,10 +21,11 @@ public class DBHelper extends SQLiteOpenHelper {
 
     @Override
     public void onUpgrade(SQLiteDatabase db, int oldVersion, int newVersion) {
-        //db.execSQL("DROP TABLE IF EXISTS TODOLIST");
-        //onCreate(db);
+        db.execSQL("DROP TABLE IF EXISTS TODOLIST");
+        onCreate(db);
     }
 
+    /*
     public void insert(int type, int year, int date, int time, String memo){
         SQLiteDatabase db = this.getWritableDatabase();
         db.execSQL("INSERT INTO TODOLIST VALUES(null," + type + ", " + year + ", " + date + ", " + time + ", '" + memo + "');");
@@ -42,4 +43,5 @@ public class DBHelper extends SQLiteOpenHelper {
         //db.execSQL("DELETE FROM TODOLIST WHERE id='" + _id + "'");
         db.close();
     }
+    */
 }

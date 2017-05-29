@@ -32,7 +32,6 @@ public class MainActivity extends AppCompatActivity {
         setContentView(R.layout.activity_main);
 
         todoList = (ListView)findViewById(R.id.todolist);
-        dbHelper = new DBHelper(getApplicationContext(), "TODOLIST.db", null, 1);
         readDB();
 
         todoList.setOnItemClickListener(new AdapterView.OnItemClickListener() {
@@ -41,29 +40,27 @@ public class MainActivity extends AppCompatActivity {
                 cursor.moveToPosition(position);
                 String str = cursor.getString(cursor.getColumnIndex("_id"));
                 Toast.makeText(getApplicationContext(), str, Toast.LENGTH_SHORT).show();
-                dbHelper.delete(cursor.getInt(cursor.getColumnIndex("_id")));
+                //dbHelper.delete(cursor.getInt(cursor.getColumnIndex("_id")));
             }
         });
     }
 
-    private void readDB() {
+    void readDB(){
+        dbHelper = new DBHelper(getApplicationContext(), "TODOLIST.db", null, 1);
         db = dbHelper.getWritableDatabase();
-        cursor = db.rawQuery("SELECT * FROM TODOLIST;", null);
-
-        if (cursor.getCount() > 0) {
-            startManagingCursor(cursor);
-            dbAdapter = new DBAdapter(this, cursor);
-            todoList.setAdapter(dbAdapter);
-        }
+        cursor = db.rawQuery("SELECT * FROM TODOLIST", null);
+        dbAdapter = new DBAdapter(this, cursor);
+        todoList.setAdapter(dbAdapter);
     }
 
     public void addTask(View view) {
         TextView tb = (TextView)findViewById(R.id.etMemo);
         String msg = tb.getText().toString();
-        dbHelper.insert(0, 0, 0, 0, msg);
-        tb.setText("");
 
-
+        db.execSQL("INSERT INTO TODOLIST VALUES (null, 0, 0, 0, 0, '" + msg + "');");
+        cursor = db.rawQuery("SELECT * FROM TODOLIST", null);
         dbAdapter.changeCursor(cursor);
+
+        tb.setText("");
     }
 }
