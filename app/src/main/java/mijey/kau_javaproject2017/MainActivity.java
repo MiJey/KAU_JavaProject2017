@@ -4,9 +4,12 @@ import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.text.Editable;
+import android.text.TextWatcher;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
+import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ListView;
 import android.widget.TextView;
@@ -29,6 +32,9 @@ public class MainActivity extends AppCompatActivity {
         setContentView(R.layout.activity_main);
 
         todoList = (ListView)findViewById(R.id.todolist);
+        EditText etMemo = (EditText)findViewById(R.id.etMemo);
+        final Button btnAdd = (Button)findViewById(R.id.btnAdd);
+
         readDB();
 
         todoList.setOnItemClickListener(new AdapterView.OnItemClickListener() {
@@ -39,6 +45,22 @@ public class MainActivity extends AppCompatActivity {
                 Toast.makeText(getApplicationContext(), str, Toast.LENGTH_SHORT).show();
                 //dbHelper.delete(cursor.getInt(cursor.getColumnIndex("_id")));
             }
+        });
+
+        etMemo.addTextChangedListener(new TextWatcher() {
+            @Override
+            public void onTextChanged(CharSequence s, int start, int before, int count) {
+                if(s.toString().trim().length()==0){
+                    btnAdd.setEnabled(false);
+                } else {
+                    btnAdd.setEnabled(true);
+                }
+            }
+
+            @Override
+            public void afterTextChanged(Editable arg0) {}
+            @Override
+            public void beforeTextChanged(CharSequence s, int start, int count, int after) {}
         });
     }
 
