@@ -22,7 +22,7 @@ public class DBAdapter extends CursorAdapter {
         TextView date = (TextView)view.findViewById(R.id.listDate);
         TextView memo = (TextView)view.findViewById(R.id.listMemo);
 
-        //DB에 있는 값을 이용해서 자연어로 바꾸기
+        //DB에 있는 값을 이용해서 자연어로 바꿔줘야함
         date.setText(cursor.getString(cursor.getColumnIndex("_id")));
         memo.setText(cursor.getString(cursor.getColumnIndex("memo")));
     }

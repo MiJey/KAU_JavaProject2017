@@ -18,8 +18,6 @@ import android.widget.Toast;
 import java.util.List;
 
 public class MainActivity extends AppCompatActivity {
-    //public final static String EXTRA_MESSAGE = "mijey.kau_javaproject2017.MESSAGE";
-
     private ListView todoList;
     private DBHelper dbHelper;
     private DBAdapter dbAdapter;
@@ -37,13 +35,23 @@ public class MainActivity extends AppCompatActivity {
 
         readDB();
 
+        /*
         todoList.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
                 cursor.moveToPosition(position);
                 String str = cursor.getString(cursor.getColumnIndex("_id"));
                 Toast.makeText(getApplicationContext(), str, Toast.LENGTH_SHORT).show();
-                //dbHelper.delete(cursor.getInt(cursor.getColumnIndex("_id")));
+            }
+        });
+        */
+        todoList.setOnItemLongClickListener(new AdapterView.OnItemLongClickListener() {
+            @Override
+            public boolean onItemLongClick(AdapterView<?> parent, View view, int position, long id) {
+                cursor.moveToPosition(position);
+                String str = cursor.getString(cursor.getColumnIndex("_id"));
+                Toast.makeText(getApplicationContext(), str, Toast.LENGTH_SHORT).show();
+                return true;
             }
         });
 
