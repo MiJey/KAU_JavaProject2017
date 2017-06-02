@@ -28,7 +28,7 @@ public class NLP {
     }
 
     public String getNaturalDate(){
-        String nl = date + "쀼쀼뺘뺘";
+        String nl = date + " ";
         return nl;
     }
 

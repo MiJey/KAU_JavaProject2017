@@ -2,15 +2,18 @@ package mijey.kau_javaproject2017;
 
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
+import android.graphics.Color;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.text.Editable;
+import android.text.Layout;
 import android.text.TextWatcher;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.LinearLayout;
 import android.widget.ListView;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -35,28 +38,30 @@ public class MainActivity extends AppCompatActivity {
 
         readDB();
 
-        /*
         todoList.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
-            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-                cursor.moveToPosition(position);
-                String str = cursor.getString(cursor.getColumnIndex("_id"));
-                Toast.makeText(getApplicationContext(), str, Toast.LENGTH_SHORT).show();
-            }
-        });
-        */
-        todoList.setOnItemLongClickListener(new AdapterView.OnItemLongClickListener() {
-            @Override
-            public boolean onItemLongClick(AdapterView<?> parent, View view, int position, long id) {
-                cursor.moveToPosition(position);
-                String str = cursor.getString(cursor.getColumnIndex("_id"));
-                Toast.makeText(getApplicationContext(), str, Toast.LENGTH_SHORT).show();
+            public void onItemClick(AdapterView<?> parent, View view, final int position, long id) {
+                Toast.makeText(getApplicationContext(), "갸아악", Toast.LENGTH_SHORT).show();
 
-                db.execSQL("DELETE FROM TODOLIST WHERE _id = " + str);
-                cursor = db.rawQuery("SELECT * FROM TODOLIST", null);
-                dbAdapter.changeCursor(cursor);
+                /*
+                LinearLayout layOpt = (LinearLayout)view.findViewById(R.id.layOption);
+                if(layOpt.getVisibility() == View.GONE) layOpt.setVisibility(View.VISIBLE);
+                else layOpt.setVisibility(View.GONE);
 
-                return true;
+                Button btnDel = (Button)layOpt.findViewById(R.id.btnDelete);
+                btnDel.setOnClickListener(new Button.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        cursor.moveToPosition(position);
+                        String str = cursor.getString(cursor.getColumnIndex("_id"));
+                        Toast.makeText(getApplicationContext(), str, Toast.LENGTH_SHORT).show();
+
+                        db.execSQL("DELETE FROM TODOLIST WHERE _id = " + str);
+                        cursor = db.rawQuery("SELECT * FROM TODOLIST", null);
+                        dbAdapter.changeCursor(cursor);
+                    }
+                });
+                */
             }
         });
 
@@ -95,4 +100,6 @@ public class MainActivity extends AppCompatActivity {
 
         tb.setText("");
     }
+
+
 }
