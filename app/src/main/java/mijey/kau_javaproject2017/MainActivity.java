@@ -5,9 +5,11 @@ import android.database.sqlite.SQLiteDatabase;
 import android.graphics.Color;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.support.v7.widget.PopupMenu;
 import android.text.Editable;
 import android.text.Layout;
 import android.text.TextWatcher;
+import android.view.MenuItem;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
@@ -41,7 +43,8 @@ public class MainActivity extends AppCompatActivity {
         todoList.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, final int position, long id) {
-                Toast.makeText(getApplicationContext(), "갸아악", Toast.LENGTH_SHORT).show();
+
+                Toast.makeText(getApplicationContext(), "뿌에엥", Toast.LENGTH_SHORT).show();
 
                 /*
                 LinearLayout layOpt = (LinearLayout)view.findViewById(R.id.layOption);
@@ -99,6 +102,28 @@ public class MainActivity extends AppCompatActivity {
         dbAdapter.changeCursor(cursor);
 
         tb.setText("");
+
+        // 버튼 클릭시 팝업 메뉴가 나오게 하기
+        // PopupMenu 는 API 11 레벨부터 제공한다
+        PopupMenu p = new PopupMenu(
+                getApplicationContext(), // 현재 화면의 제어권자
+                view); // anchor : 팝업을 띄울 기준될 위젯
+
+        getMenuInflater().inflate(R.menu.menu_main, p.getMenu());
+
+        // 이벤트 처리
+        p.setOnMenuItemClickListener(new PopupMenu.OnMenuItemClickListener() {
+            @Override
+            public boolean onMenuItemClick(MenuItem item) {
+                Toast.makeText(getApplicationContext(),
+                        "팝업메뉴 이벤트 처리 - "
+                                + item.getTitle(),
+                        Toast.LENGTH_SHORT).show();
+                return false;
+            }
+        });
+
+        p.show(); // 메뉴를 띄우기
     }
 
 
