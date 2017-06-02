@@ -19,12 +19,13 @@ public class DBAdapter extends CursorAdapter {
 
     @Override
     public void bindView(View view, Context context, Cursor cursor) {
-        TextView date = (TextView)view.findViewById(R.id.listDate);
-        TextView memo = (TextView)view.findViewById(R.id.listMemo);
+        TextView memo = (TextView)view.findViewById(R.id.listDate);
 
-        //DB에 있는 값을 이용해서 자연어로 바꿔줘야함
-        date.setText(cursor.getString(cursor.getColumnIndex("date")) + "★");
-        memo.setText(cursor.getString(cursor.getColumnIndex("memo")));
+        //DB에 있는 type, date, memo를 NLP를 이용해서 자연어로 바꿔서 출력
+        NLP msg = new NLP(cursor.getInt(cursor.getColumnIndex("type")),
+                          cursor.getString(cursor.getColumnIndex("date")),
+                          cursor.getString(cursor.getColumnIndex("memo")));
+        memo.setText(msg.getNaturalDate() + " " + msg.getMemo());
     }
 
     @Override
