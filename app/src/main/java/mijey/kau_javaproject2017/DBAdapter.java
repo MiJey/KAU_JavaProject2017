@@ -7,6 +7,9 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.CursorAdapter;
 import android.widget.TextView;
+import android.widget.Toast;
+
+import java.text.ParseException;
 
 /**
  * Created by yeaji on 2017-05-28.
@@ -22,10 +25,14 @@ public class DBAdapter extends CursorAdapter {
         TextView memo = (TextView)view.findViewById(R.id.tvMemo);
 
         //DB에 있는 type, date, memo를 NLP를 이용해서 자연어로 바꿔서 출력
-        NLP msg = new NLP(cursor.getInt(cursor.getColumnIndex("type")),
-                          cursor.getString(cursor.getColumnIndex("date")),
-                          cursor.getString(cursor.getColumnIndex("memo")));
-        memo.setText(msg.getNaturalDate() + " " + msg.getMemo());
+        try {
+            NLP msg = new NLP(cursor.getInt(cursor.getColumnIndex("type")),
+                    cursor.getString(cursor.getColumnIndex("date")),
+                    cursor.getString(cursor.getColumnIndex("memo")));
+            memo.setText(msg.getNaturalDate() + " " + msg.getMemo());
+        }catch(ParseException e){
+            memo.setText("문제가 있단말이야!");
+        }
     }
 
     @Override

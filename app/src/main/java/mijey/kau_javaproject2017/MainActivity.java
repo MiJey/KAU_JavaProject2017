@@ -51,15 +51,16 @@ public class MainActivity extends AppCompatActivity {
                         switch (item.toString()){
                             case "수정":
                                 //수정할 수 있게 해야함
+                                Toast.makeText(getApplicationContext(), "수정을 하란 말이야!", Toast.LENGTH_SHORT).show();
                                 break;
                             case "삭제":
                                 cursor.moveToPosition(position);
-                                String str = cursor.getString(cursor.getColumnIndex("_id"));
-                                Toast.makeText(getApplicationContext(), str, Toast.LENGTH_SHORT).show();
-
-                                db.execSQL("DELETE FROM TODOLIST WHERE _id = " + str);
+                                String id = cursor.getString(cursor.getColumnIndex("_id"));
+                                String m = cursor.getString(cursor.getColumnIndex("memo"));
+                                db.execSQL("DELETE FROM TODOLIST WHERE _id = " + id);
                                 cursor = db.rawQuery("SELECT * FROM TODOLIST", null);
                                 dbAdapter.changeCursor(cursor);
+                                Toast.makeText(getApplicationContext(), m + "는 이제 안녕~", Toast.LENGTH_SHORT).show();
                                 break;
                             default: break;
                         }
