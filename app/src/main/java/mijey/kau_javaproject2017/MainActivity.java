@@ -43,28 +43,31 @@ public class MainActivity extends AppCompatActivity {
         todoList.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, final int position, long id) {
+                PopupMenu popup = new PopupMenu(MainActivity.this, view);
+                popup.getMenuInflater().inflate(R.menu.menu_main, popup.getMenu());
 
-                Toast.makeText(getApplicationContext(), "뿌에엥", Toast.LENGTH_SHORT).show();
+                popup.setOnMenuItemClickListener(new PopupMenu.OnMenuItemClickListener() {
+                    public boolean onMenuItemClick(MenuItem item) {
+                        switch (item.toString()){
+                            case "수정":
+                                //수정할 수 있게 해야함
+                                break;
+                            case "삭제":
+                                cursor.moveToPosition(position);
+                                String str = cursor.getString(cursor.getColumnIndex("_id"));
+                                Toast.makeText(getApplicationContext(), str, Toast.LENGTH_SHORT).show();
 
-                /*
-                LinearLayout layOpt = (LinearLayout)view.findViewById(R.id.layOption);
-                if(layOpt.getVisibility() == View.GONE) layOpt.setVisibility(View.VISIBLE);
-                else layOpt.setVisibility(View.GONE);
-
-                Button btnDel = (Button)layOpt.findViewById(R.id.btnDelete);
-                btnDel.setOnClickListener(new Button.OnClickListener() {
-                    @Override
-                    public void onClick(View v) {
-                        cursor.moveToPosition(position);
-                        String str = cursor.getString(cursor.getColumnIndex("_id"));
-                        Toast.makeText(getApplicationContext(), str, Toast.LENGTH_SHORT).show();
-
-                        db.execSQL("DELETE FROM TODOLIST WHERE _id = " + str);
-                        cursor = db.rawQuery("SELECT * FROM TODOLIST", null);
-                        dbAdapter.changeCursor(cursor);
+                                db.execSQL("DELETE FROM TODOLIST WHERE _id = " + str);
+                                cursor = db.rawQuery("SELECT * FROM TODOLIST", null);
+                                dbAdapter.changeCursor(cursor);
+                                break;
+                            default: break;
+                        }
+                        return true;
                     }
                 });
-                */
+
+                popup.show();
             }
         });
 
@@ -102,28 +105,6 @@ public class MainActivity extends AppCompatActivity {
         dbAdapter.changeCursor(cursor);
 
         tb.setText("");
-
-        // 버튼 클릭시 팝업 메뉴가 나오게 하기
-        // PopupMenu 는 API 11 레벨부터 제공한다
-        PopupMenu p = new PopupMenu(
-                getApplicationContext(), // 현재 화면의 제어권자
-                view); // anchor : 팝업을 띄울 기준될 위젯
-
-        getMenuInflater().inflate(R.menu.menu_main, p.getMenu());
-
-        // 이벤트 처리
-        p.setOnMenuItemClickListener(new PopupMenu.OnMenuItemClickListener() {
-            @Override
-            public boolean onMenuItemClick(MenuItem item) {
-                Toast.makeText(getApplicationContext(),
-                        "팝업메뉴 이벤트 처리 - "
-                                + item.getTitle(),
-                        Toast.LENGTH_SHORT).show();
-                return false;
-            }
-        });
-
-        p.show(); // 메뉴를 띄우기
     }
 
 

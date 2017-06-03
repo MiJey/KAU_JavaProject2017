@@ -3,6 +3,6 @@
     <string name="app_name">오늘내일모레 할 일</string>
     <string name="edit_message">내일까지 과제하기</string>
     <string name="button_send">추가!</string>
-    <string name="modified">수정</string>
-    <string name="delete">삭제</string>
+    <string name="popup_modified">수정</string>
+    <string name="popup_delete">삭제</string>
 </resources>
