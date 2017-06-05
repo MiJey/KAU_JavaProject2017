@@ -3,10 +3,37 @@ package mijey.kau_javaproject2017;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
+import java.util.Date;
 
 //Natural Language Processing
 public class NLP {
-    /*
+    private int type;
+    private Calendar date;
+    private String memo;
+
+    SimpleDateFormat sdf = new SimpleDateFormat("yyyy-mm-dd hh:mm");
+
+    public NLP(String msg){
+        //자연어를 Calendar로 바꿔줘야 함 --> 분석하기
+        Calendar now = Calendar.getInstance();
+
+        type = 0;
+        date = now;
+        memo = msg;
+    }
+
+    public NLP(int _type, String _date, String _memo) throws ParseException {
+        type = _type;
+        Date d = sdf.parse(_date);
+        date = Calendar.getInstance();
+        date.setTime(d);
+        memo = _memo;
+    }
+
+    public String getNaturalDate(){
+        String nl = sdf.format(date.getTime());
+
+        /*
     A유추가능 T오늘 L디폴트(막날),표시x
     없을때가중치    월(8)일(4)  시간(2)  요일(1)
     0       (yyyy년) mm월 dd일 hh시(mm분) O
@@ -27,31 +54,7 @@ public class NLP {
     15  	(yyyy년) LL월 LL일 LL시(LL분) X
     16      그냥 메모
     */
-    private int type;
-    private Calendar date;
-    private String memo;
 
-    SimpleDateFormat sdf = new SimpleDateFormat("yyyymmddhhmm");
-    //DateFormat df = DateFormat.getDateInstance(DateFormat.FULL);
-
-    public NLP(String msg){
-        //자연어를 Calendar로 바꿔줘야 함 --> 분석하기
-        Calendar now = Calendar.getInstance();
-
-        type = 0;
-        date = now;
-        memo = msg;
-    }
-
-    public NLP(int _type, String _date, String _memo) throws ParseException {
-        type = _type;
-        date.setTime(sdf.parse("yyyymmddhhmm"));
-        //date.setTime(sdf.parse("yyyy-mm-dd hh:mm"));
-        memo = _memo;
-    }
-
-    public String getNaturalDate(){
-        String nl = sdf.format(date.getTime());
         switch(type) {
             case 0: //(yyyy년) mm월 dd일 hh시(mm분) O
             case 4: //(yyyy년) mm월 AA일 hh시(mm분) O

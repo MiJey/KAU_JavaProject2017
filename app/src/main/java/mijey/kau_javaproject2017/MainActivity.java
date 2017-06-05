@@ -2,25 +2,19 @@ package mijey.kau_javaproject2017;
 
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
-import android.graphics.Color;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.support.v7.widget.PopupMenu;
 import android.text.Editable;
-import android.text.Layout;
 import android.text.TextWatcher;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.AdapterView;
-import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.EditText;
-import android.widget.LinearLayout;
 import android.widget.ListView;
 import android.widget.TextView;
 import android.widget.Toast;
-
-import java.util.List;
 
 public class MainActivity extends AppCompatActivity {
     private ListView todoList;
@@ -51,7 +45,7 @@ public class MainActivity extends AppCompatActivity {
                         switch (item.toString()){
                             case "수정":
                                 //수정할 수 있게 해야함
-                                Toast.makeText(getApplicationContext(), "수정을 하란 말이야!", Toast.LENGTH_SHORT).show();
+                                Toast.makeText(getApplicationContext(), "수정하기 기능 만들어야 함ㅠㅠ", Toast.LENGTH_SHORT).show();
                                 break;
                             case "삭제":
                                 cursor.moveToPosition(position);
@@ -60,7 +54,7 @@ public class MainActivity extends AppCompatActivity {
                                 db.execSQL("DELETE FROM TODOLIST WHERE _id = " + id);
                                 cursor = db.rawQuery("SELECT * FROM TODOLIST", null);
                                 dbAdapter.changeCursor(cursor);
-                                Toast.makeText(getApplicationContext(), m + "는 이제 안녕~", Toast.LENGTH_SHORT).show();
+                                Toast.makeText(getApplicationContext(), m + "이(가) 삭제되었습니다" + id, Toast.LENGTH_SHORT).show();
                                 break;
                             default: break;
                         }
