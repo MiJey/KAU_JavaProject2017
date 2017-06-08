@@ -6,8 +6,15 @@
     android:padding="10dp" >
 
     <TextView
-        android:id="@+id/tvMemo"
+        android:id="@+id/tvDate"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:textSize="25sp"/>
+        android:textSize="15sp"/>
+
+    <TextView
+    android:id="@+id/tvMemo"
+    android:layout_width="wrap_content"
+    android:layout_height="wrap_content"
+    android:textSize="25sp"/>
+
 </LinearLayout>

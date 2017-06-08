@@ -20,17 +20,20 @@ public class DBAdapter extends CursorAdapter {
 
     @Override
     public void bindView(View view, Context context, Cursor cursor) {
-        TextView memo = (TextView) view.findViewById(R.id.tvMemo);
-
+        TextView tvMemo = (TextView)view.findViewById(R.id.tvMemo);
+        TextView tvDate = (TextView)view.findViewById(R.id.tvDate);
         //DB에 있는 type, date, memo를 NLP를 이용해서 자연어로 바꿔서 출력
 
         try {
             NLP msg = new NLP(cursor.getInt(cursor.getColumnIndex("type")),
-                    cursor.getString(cursor.getColumnIndex("date")),
-                    cursor.getString(cursor.getColumnIndex("memo")));
-            memo.setText(msg.getNaturalDate() + " " + msg.getMemo());
+                              cursor.getString(cursor.getColumnIndex("date")),
+                              cursor.getString(cursor.getColumnIndex("memo")));
+            tvMemo.setText(msg.getNaturalDate() + " " + msg.getMemo());
+            tvDate.setText(msg.getDate());
+
         }catch(ParseException e){
-            memo.setText("문제가 발생했다!");
+            tvMemo.setText("문제가 발생했다!");
+            tvDate.setText("여기도!");
         }
 
     }

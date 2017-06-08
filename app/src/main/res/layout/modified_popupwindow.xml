@@ -11,17 +11,23 @@
         android:layout_height="wrap_content"
         android:orientation="vertical"
         android:background="#0000ff">
-    <DatePicker
-        android:id="@+id/datePicker"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content" />
 
-    <EditText
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:textSize="25sp"
-        android:text="ㅌㅅㅌㅌㅅㅌ" />
+        <EditText
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:textSize="25sp"
+            android:text="ㅌㅅㅌㅌㅅㅌ" />
+
+        <Button
+            android:id="@+id/btnPopupConfirm"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/confirm"/>
     <!--
+    <DatePicker
+            android:id="@+id/datePicker"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content" />
     <TimePicker
         android:id="@+id/timePicker"
         android:layout_width="match_parent"
