@@ -49,9 +49,8 @@ public class MainActivity extends AppCompatActivity {
                     public boolean onMenuItemClick(MenuItem item) {
                         switch (item.toString()){
                             case "수정":
-                                //수정할 수 있게 해야함
-                                //Toast.makeText(getApplicationContext(), "수정하기 기능 만들어야 함ㅠㅠ", Toast.LENGTH_SHORT).show();
                                 Intent intent = new Intent(getApplicationContext(), ModifiedActivity.class);
+                                //적당히 값 넘겨주기
                                 //EditText editText = (EditText) findViewById(R.id.edit_message);
                                 //String message = editText.getText().toString();
                                 //intent.putExtra(EXTRA_MESSAGE, message);
