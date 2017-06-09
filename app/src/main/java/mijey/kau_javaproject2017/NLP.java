@@ -51,8 +51,7 @@ public class NLP {
     }
 
     public String getNaturalDate(){
-        Calendar now = Calendar.getInstance();
-        String nl = ""; //sdf.format(date.getTime());
+
 
         /*
         A유추가능 T오늘 L디폴트(막날),표시x
@@ -77,12 +76,15 @@ public class NLP {
         */
         if(type == 16) return "";
 
-        //지난날
+        Calendar now = Calendar.getInstance();
+        long dif = differenceOfDays(date, now);
 
-        int dif = differenceOfDays(date, now);
-        if(dif == 0) return "오늘까지";
-        else if(dif == 1) return "내일까지";
-        else if(dif == 2) return "모레까지";
+        if(dif < 0) return dif+"지난날";
+        else if(dif == 0) return dif+"오늘까지";
+        else if(dif == 1) return dif+"내일까지";
+        else if(dif == 2) return dif+"모레까지";
+
+        String nl = ""; //sdf.format(date.getTime());
 
         if(type/2 == 0)
             nl = DayOfWeek(date.get(Calendar.DAY_OF_WEEK));
@@ -110,8 +112,8 @@ public class NLP {
         return week[d] + "요일";
     }
 
-    private int differenceOfDays(Calendar d1, Calendar d2){
+    private long differenceOfDays(Calendar d1, Calendar d2){
         long diff = (d1.getTimeInMillis() - d2.getTimeInMillis())/1000/60/60/24;   //return d1-d2
-        return (int)diff;
+        return diff;
     }
 }

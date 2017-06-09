@@ -1,27 +1,24 @@
 package mijey.kau_javaproject2017;
 
-import android.content.Context;
+import android.content.Intent;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
-import android.graphics.drawable.BitmapDrawable;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.support.v7.widget.PopupMenu;
 import android.text.Editable;
 import android.text.TextWatcher;
-import android.view.Gravity;
-import android.view.LayoutInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.Button;
 import android.widget.EditText;
-import android.widget.LinearLayout;
 import android.widget.ListView;
 import android.widget.PopupWindow;
-import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.Toast;
+
+import static android.provider.AlarmClock.EXTRA_MESSAGE;
 
 public class MainActivity extends AppCompatActivity {
     private ListView todoList;
@@ -46,14 +43,19 @@ public class MainActivity extends AppCompatActivity {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, final int position, long id) {
                 PopupMenu popup = new PopupMenu(MainActivity.this, view);
-                popup.getMenuInflater().inflate(R.menu.menu_main, popup.getMenu());
+                popup.getMenuInflater().inflate(R.menu.menu_option, popup.getMenu());
 
                 popup.setOnMenuItemClickListener(new PopupMenu.OnMenuItemClickListener() {
                     public boolean onMenuItemClick(MenuItem item) {
                         switch (item.toString()){
                             case "수정":
                                 //수정할 수 있게 해야함
-                                Toast.makeText(getApplicationContext(), "수정하기 기능 만들어야 함ㅠㅠ", Toast.LENGTH_SHORT).show();
+                                //Toast.makeText(getApplicationContext(), "수정하기 기능 만들어야 함ㅠㅠ", Toast.LENGTH_SHORT).show();
+                                Intent intent = new Intent(getApplicationContext(), ModifiedActivity.class);
+                                //EditText editText = (EditText) findViewById(R.id.edit_message);
+                                //String message = editText.getText().toString();
+                                //intent.putExtra(EXTRA_MESSAGE, message);
+                                startActivity(intent);
 
                                 break;
                             case "삭제":
