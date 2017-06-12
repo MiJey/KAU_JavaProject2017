@@ -11,7 +11,7 @@ public class NLP {
     private String memo;
 
     SimpleDateFormat SDF = new SimpleDateFormat("yyyy-MM-dd hh:mm");
-    SimpleDateFormat yMdSDF = new SimpleDateFormat("yyyy-MM-dd");
+    //SimpleDateFormat yMdSDF = new SimpleDateFormat("yyyy-MM-dd");
 
     public NLP(String msg){ //EditText --> DB
         /*

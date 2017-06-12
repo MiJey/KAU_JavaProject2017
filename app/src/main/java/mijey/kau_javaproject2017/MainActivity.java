@@ -1,5 +1,6 @@
 package mijey.kau_javaproject2017;
 
+import android.content.ContentValues;
 import android.content.Intent;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
@@ -14,19 +15,15 @@ import android.widget.AdapterView;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ListView;
-import android.widget.PopupWindow;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import static android.provider.AlarmClock.EXTRA_MESSAGE;
-
 public class MainActivity extends AppCompatActivity {
-    private ListView todoList;
-    private DBHelper dbHelper;
-    private DBAdapter dbAdapter;
-    private SQLiteDatabase db;
-    private Cursor cursor;
-    private PopupWindow pwModified;
+    protected ListView todoList;
+    protected DBHelper dbHelper;
+    protected DBAdapter dbAdapter;
+    protected SQLiteDatabase db;
+    protected Cursor cursor;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -47,23 +44,27 @@ public class MainActivity extends AppCompatActivity {
 
                 popup.setOnMenuItemClickListener(new PopupMenu.OnMenuItemClickListener() {
                     public boolean onMenuItemClick(MenuItem item) {
+                        String id = cursor.getString(cursor.getColumnIndex("_id"));
+
                         switch (item.toString()){
                             case "수정":
-                                Intent intent = new Intent(getApplicationContext(), ModifiedActivity.class);
-                                //적당히 값 넘겨주기
-                                //EditText editText = (EditText) findViewById(R.id.edit_message);
-                                //String message = editText.getText().toString();
-                                //intent.putExtra(EXTRA_MESSAGE, message);
-                                startActivity(intent);
-
+                                ContentValues cv = new ContentValues();
+                                cv.put("type",0); //These Fields should be your String values of actual column names
+                                cv.put("date","2017-07-11 10:23");
+                                cv.put("memo","업데이트 테스트");
+                                db.update("TODOLIST", cv, "_id="+id, null);
+                                cursor = db.rawQuery("SELECT * FROM TODOLIST ORDER BY date ASC", null);
+                                dbAdapter.changeCursor(cursor);
+                                //Intent intent = new Intent(getApplicationContext(), ModifiedActivity.class);
+                                //intent.putExtra("id", id);
+                                //startActivity(intent);
                                 break;
                             case "삭제":
                                 //삭제확인 다이얼로그 띄우는 것도 좋을 듯
                                 cursor.moveToPosition(position);
-                                String id = cursor.getString(cursor.getColumnIndex("_id"));
                                 String m = cursor.getString(cursor.getColumnIndex("memo"));
                                 db.execSQL("DELETE FROM TODOLIST WHERE _id = " + id);
-                                cursor = db.rawQuery("SELECT * FROM TODOLIST", null);
+                                cursor = db.rawQuery("SELECT * FROM TODOLIST ORDER BY date ASC", null);
                                 dbAdapter.changeCursor(cursor);
                                 Toast.makeText(getApplicationContext(), m + "이(가) 삭제되었습니다" + id, Toast.LENGTH_SHORT).show();
                                 break;
@@ -107,7 +108,7 @@ public class MainActivity extends AppCompatActivity {
         NLP msg = new NLP(tb.getText().toString());
 
         db.execSQL("INSERT INTO TODOLIST VALUES(null, " + msg.getType() + ", '" + msg.getDate() + "', '" + msg.getMemo() +"');");
-        cursor = db.rawQuery("SELECT * FROM TODOLIST", null);
+        cursor = db.rawQuery("SELECT * FROM TODOLIST ORDER BY date ASC", null);
         dbAdapter.changeCursor(cursor);
 
         tb.setText("");

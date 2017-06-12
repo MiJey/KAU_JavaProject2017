@@ -15,7 +15,6 @@ public class DBHelper extends SQLiteOpenHelper {
         //id    type    date                memo
         //123   0       '2017-05-30 00:59'  '메모메모'
         db.execSQL("CREATE TABLE TODOLIST (_id INTEGER PRIMARY KEY AUTOINCREMENT, type INTEGER, date TEXT, memo TEXT);");
-        //db.execSQL("INSERT INTO TODOLIST Values (null, 0, '2017-06-09 10:00', 'DB테스트');");
     }
 
     @Override
