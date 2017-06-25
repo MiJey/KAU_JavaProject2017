@@ -6,99 +6,69 @@ import java.util.Calendar;
 
 //Natural Language Processing
 public class NLP {
+    private final int NORMAL = 0, MEMO = 1;
     private int type;
     private Calendar date;
     private String memo;
-
     private SimpleDateFormat SDF = new SimpleDateFormat("yyyy-MM-dd hh:mm");
-    //SimpleDateFormat yMdSDF = new SimpleDateFormat("yyyy-MM-dd");
 
-    public NLP(String msg){ //EditText --> DB
-        /*
-        A유추가능 T오늘 L디폴트(막날),표시x
-        없을때가중치    월(8)일(4)  시간(2)  요일(1)
-        0       (yyyy년) mm월 dd일 hh시(mm분) O
-        1       (yyyy년) mm월 dd일 hh시(mm분) X
-        2    	(yyyy년) mm월 dd일 LL시(LL분) O
-        3  	    (yyyy년) mm월 dd일 LL시(LL분) X
-        4→0	(yyyy년) mm월 AA일 hh시(mm분) O
-        5→1	(yyyy년) mm월 TT일 hh시(mm분) X
-        6→2	(yyyy년) mm월 AA일 LL시(LL분) O
-        7   	(yyyy년) mm월 LL일 LL시(LL분) X
-        8   	(yyyy년) TT월 dd일 hh시(mm분) O
-        9   	(yyyy년) TT월 dd일 hh시(mm분) X
-        10  	(yyyy년) TT월 dd일 LL시(LL분) O
-        11  	(yyyy년) TT월 dd일 LL시(LL분) X
-        12→8	(yyyy년) TT월 AA일 hh시(mm분) O
-        13 	    (yyyy년) TT월 TT일 hh시(mm분) X
-        14→10	(yyyy년) TT월 AA일 LL시(LL분) O
-        15  	(yyyy년) LL월 LL일 LL시(LL분) X
-        16      그냥 메모
-        */
-        //자연어를 Calendar로 바꿔줘야 함 --> 분석하기
-        Calendar now = Calendar.getInstance();
+    //EditText --> DB
+    public NLP(String msg){
+        int idx = msg.indexOf("까지");
+        date = Calendar.getInstance();
 
-        type = 0;
-        date = now;
+        if (idx > 0) {
+            String d = msg.substring(0, idx).replaceAll("\\s", "");
+            String m = msg.substring(idx + 2).trim();
+
+            type = NORMAL;
+            memo = m;
+
+            if (d.contains("오늘")) return;
+            if (d.contains("내일")) {
+                date.add(Calendar.DATE, 1);
+                return;
+            }
+            if(d.contains("모레")){
+                date.add(Calendar.DATE, 2);
+                return;
+            }
+
+            //다음주
+        }
+
+        //메모
+        type = MEMO;
         memo = msg;
     }
 
-    public NLP(int _type, String _date, String _memo) throws ParseException {   //DB --> ListView
+    //DB --> ListView
+    public NLP(int _type, String _date, String _memo) throws ParseException {
         type = _type;
         date = Calendar.getInstance();
         date.setTime(SDF.parse(_date));
         memo = _memo;
     }
 
-    public String getNaturalDate(){
-        /*
-        A유추가능 T오늘 L디폴트(막날),표시x
-        없을때가중치    월(8)일(4)  시간(2)  요일(1)
-        0       (yyyy년) mm월 dd일 hh시(mm분) O
-        1       (yyyy년) mm월 dd일 hh시(mm분) X
-        2    	(yyyy년) mm월 dd일 LL시(LL분) O
-        3  	    (yyyy년) mm월 dd일 LL시(LL분) X
-        4→0	(yyyy년) mm월 AA일 hh시(mm분) O
-        5→1	(yyyy년) mm월 TT일 hh시(mm분) X
-        6→2	(yyyy년) mm월 AA일 LL시(LL분) O
-        7   	(yyyy년) mm월 LL일 LL시(LL분) X
-        8   	(yyyy년) TT월 dd일 hh시(mm분) O
-        9   	(yyyy년) TT월 dd일 hh시(mm분) X
-        10  	(yyyy년) TT월 dd일 LL시(LL분) O
-        11  	(yyyy년) TT월 dd일 LL시(LL분) X
-        12→8	(yyyy년) TT월 AA일 hh시(mm분) O
-        13 	    (yyyy년) TT월 TT일 hh시(mm분) X
-        14→10	(yyyy년) TT월 AA일 LL시(LL분) O
-        15  	(yyyy년) LL월 LL일 LL시(LL분) X
-        16      그냥 메모
-        */
-        if(type == 16) return "";
+    public String getNaturalDate() {
+        if (type == MEMO) return "[메모] ";
 
         Calendar now = Calendar.getInstance();
-        long dif = differenceOfDays(date, now);
+        long dif = differenceOfDays(now, date);
 
-        if(dif < 0) return dif+"지난날";
-        else if(dif == 0) return dif+"오늘까지";
-        else if(dif == 1) return dif+"내일까지";
-        else if(dif == 2) return dif+"모레까지";
+        if (dif < -1) return "[삭제] ";
+        if (dif == -1) return "어제까지 ";
+        else if (dif == 0) return "오늘까지 ";
+        else if (dif == 1) return "내일까지 ";
+        else if (dif == 2) return "모레까지 ";
 
-        String nl = ""; //sdf.format(date.getTime());
+        int dow = date.get(Calendar.DAY_OF_WEEK);
+        if (dif <= 7 - dow) return "이번 주 " + DayOfWeek(dow) + "까지 ";
+        if (dif <= 14 - dow) return "다음 주 " + DayOfWeek(dow) + "까지 ";
 
-        if(type/2 == 0)
-            nl = DayOfWeek(date.get(Calendar.DAY_OF_WEEK));
-
-        //이번주
-        //다음주
-        if(date.get(Calendar.MONTH) == now.get(Calendar.MONTH))
-            nl = "이번 달" + (nl==""?"":" ") + nl;
-        //다음달
-        else
-            nl = nl + date.get(Calendar.MONTH) + "월 ";
-
-        if(date.get(Calendar.YEAR) != now.get(Calendar.YEAR))
-            nl = date.get(Calendar.YEAR) + "년" + (nl==""?"":" ") + nl;
-
-        return nl + "까지 ";
+        String nl = date.get(Calendar.MONTH) + "월 " + date.get(Calendar.DATE) + "일까지 ";
+        if (now.get(Calendar.YEAR) != date.get(Calendar.YEAR)) nl = date.get(Calendar.YEAR) + "년 ";
+        return nl;
     }
 
     public int getType(){return type;}
@@ -111,7 +81,11 @@ public class NLP {
     }
 
     private long differenceOfDays(Calendar d1, Calendar d2){
-        long diff = (d1.getTimeInMillis() - d2.getTimeInMillis())/1000/60/60/24;   //return d1-d2
+        Calendar start = Calendar.getInstance();
+        Calendar end = Calendar.getInstance();
+        start.set(d1.get(Calendar.YEAR), d1.get(Calendar.MONTH), d1.get(Calendar.DATE));
+        end.set(d2.get(Calendar.YEAR), d2.get(Calendar.MONTH), d2.get(Calendar.DATE));
+        long diff = (end.getTimeInMillis() - start.getTimeInMillis())/1000/60/60/24;
         return diff;
     }
 }

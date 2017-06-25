@@ -48,7 +48,7 @@ public class ModifiedActivity extends AppCompatActivity  {
         date.setTime(SDF.parse(getIntent().getExtras().getString("date")));
 
         datePicker = (DatePicker)findViewById(R.id.datePicker);
-        datePicker.setMinDate(System.currentTimeMillis() - 1000);
+        //datePicker.setMinDate(System.currentTimeMillis() - 1000);
         timePicker = (TimePicker)findViewById(R.id.timePicker);
         modiMemo = (EditText)findViewById(R.id.etModiMemo);
 
@@ -74,10 +74,15 @@ public class ModifiedActivity extends AppCompatActivity  {
         }
 
         if (itemId == R.id.btnSave) {   //저장
+            if(modiMemo.getText().toString().equals("")){
+                Toast.makeText(this, "메모를 입력해주세요", Toast.LENGTH_SHORT).show();
+              //  return false;
+            }
+
             date.set(datePicker.getYear(), datePicker.getMonth(), datePicker.getDayOfMonth(), timePicker.getCurrentHour(), timePicker.getCurrentMinute());
             Intent intent = getIntent();
             intent.putExtra("id", id);
-            intent.putExtra("type", "16");
+            intent.putExtra("type", "0");
             intent.putExtra("date", SDF.format(date.getTime()));
             intent.putExtra("memo", modiMemo.getText().toString());
             setResult(RESULT_OK,intent);
