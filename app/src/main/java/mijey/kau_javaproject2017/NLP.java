@@ -10,7 +10,7 @@ public class NLP {
     private Calendar date;
     private String memo;
 
-    SimpleDateFormat SDF = new SimpleDateFormat("yyyy-MM-dd hh:mm");
+    private SimpleDateFormat SDF = new SimpleDateFormat("yyyy-MM-dd hh:mm");
     //SimpleDateFormat yMdSDF = new SimpleDateFormat("yyyy-MM-dd");
 
     public NLP(String msg){ //EditText --> DB
@@ -51,8 +51,6 @@ public class NLP {
     }
 
     public String getNaturalDate(){
-
-
         /*
         A유추가능 T오늘 L디폴트(막날),표시x
         없을때가중치    월(8)일(4)  시간(2)  요일(1)

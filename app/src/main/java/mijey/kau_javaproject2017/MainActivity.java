@@ -1,5 +1,6 @@
 package mijey.kau_javaproject2017;
 
+import android.app.Activity;
 import android.content.ContentValues;
 import android.content.Intent;
 import android.database.Cursor;
@@ -30,12 +31,13 @@ public class MainActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
-        todoList = (ListView)findViewById(R.id.todolist);
-        EditText etMemo = (EditText)findViewById(R.id.etMemo);
-        final Button btnAdd = (Button)findViewById(R.id.btnAdd);
+        todoList = (ListView) findViewById(R.id.todolist);
+        EditText etMemo = (EditText) findViewById(R.id.etMemo);
+        final Button btnAdd = (Button) findViewById(R.id.btnAdd);
 
         readDB();
 
+        //메모를 선택하면 수정/삭제 팝업메뉴 띄우기
         todoList.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, final int position, long id) {
@@ -45,49 +47,43 @@ public class MainActivity extends AppCompatActivity {
                 popup.setOnMenuItemClickListener(new PopupMenu.OnMenuItemClickListener() {
                     public boolean onMenuItemClick(MenuItem item) {
                         String id = cursor.getString(cursor.getColumnIndex("_id"));
+                        String type = cursor.getString(cursor.getColumnIndex("type"));
+                        String date = cursor.getString(cursor.getColumnIndex("date"));
+                        String memo = cursor.getString(cursor.getColumnIndex("memo"));
 
-                        switch (item.toString()){
+                        switch (item.toString()) {
                             case "수정":
-                                ContentValues cv = new ContentValues();
-                                cv.put("type",0); //These Fields should be your String values of actual column names
-                                cv.put("date","2017-07-11 10:23");
-                                cv.put("memo","업데이트 테스트");
-                                db.update("TODOLIST", cv, "_id="+id, null);
-                                cursor = db.rawQuery("SELECT * FROM TODOLIST ORDER BY date ASC", null);
-                                dbAdapter.changeCursor(cursor);
-                                //Intent intent = new Intent(getApplicationContext(), ModifiedActivity.class);
-                                //intent.putExtra("id", id);
-                                //startActivity(intent);
+                                Intent intent = new Intent(getApplicationContext(), ModifiedActivity.class);
+                                intent.putExtra("id", id);
+                                intent.putExtra("type", type);
+                                intent.putExtra("date", date);
+                                intent.putExtra("memo", memo);
+                                startActivityForResult(intent, 0);
                                 break;
                             case "삭제":
-                                //삭제확인 다이얼로그 띄우는 것도 좋을 듯
                                 cursor.moveToPosition(position);
                                 String m = cursor.getString(cursor.getColumnIndex("memo"));
                                 db.execSQL("DELETE FROM TODOLIST WHERE _id = " + id);
-                                cursor = db.rawQuery("SELECT * FROM TODOLIST ORDER BY date ASC", null);
-                                dbAdapter.changeCursor(cursor);
+                                listRefresh();
                                 Toast.makeText(getApplicationContext(), m + "이(가) 삭제되었습니다" + id, Toast.LENGTH_SHORT).show();
                                 break;
-                            default: break;
+                            default:
+                                break;
                         }
                         return true;
                     }
                 });
-
                 popup.show();
             }
         });
 
+        //글자 입력했을 때만 추가버튼 활성화
         etMemo.addTextChangedListener(new TextWatcher() {
             @Override
             public void onTextChanged(CharSequence s, int start, int before, int count) {
-                if(s.toString().trim().length()==0){
-                    btnAdd.setEnabled(false);
-                } else {
-                    btnAdd.setEnabled(true);
-                }
+                if (s.toString().trim().length() == 0) btnAdd.setEnabled(false);
+                else btnAdd.setEnabled(true);
             }
-
             @Override
             public void afterTextChanged(Editable arg0) {}
             @Override
@@ -95,7 +91,7 @@ public class MainActivity extends AppCompatActivity {
         });
     }
 
-    void readDB(){
+    void readDB() {
         dbHelper = new DBHelper(getApplicationContext(), "TODOLIST.db", null, 1);
         db = dbHelper.getWritableDatabase();
         cursor = db.rawQuery("SELECT * FROM TODOLIST ORDER BY date ASC", null);
@@ -104,15 +100,37 @@ public class MainActivity extends AppCompatActivity {
     }
 
     public void addTask(View view) {
-        TextView tb = (TextView)findViewById(R.id.etMemo);
+        TextView tb = (TextView) findViewById(R.id.etMemo);
         NLP msg = new NLP(tb.getText().toString());
 
-        db.execSQL("INSERT INTO TODOLIST VALUES(null, " + msg.getType() + ", '" + msg.getDate() + "', '" + msg.getMemo() +"');");
-        cursor = db.rawQuery("SELECT * FROM TODOLIST ORDER BY date ASC", null);
-        dbAdapter.changeCursor(cursor);
+        db.execSQL("INSERT INTO TODOLIST VALUES(null, " + msg.getType() + ", '" + msg.getDate() + "', '" + msg.getMemo() + "');");
+        listRefresh();
 
         tb.setText("");
     }
 
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        if (resultCode == Activity.RESULT_OK) {
+            ContentValues cv = new ContentValues();
+            cv.put("type", data.getStringExtra("type"));
+            cv.put("date", data.getStringExtra("date"));
+            cv.put("memo", data.getStringExtra("memo"));
 
+            String id = data.getStringExtra("id");
+
+            db.update("TODOLIST", cv, "_id=" + id, null);
+            listRefresh();
+
+            Toast.makeText(this, "수정되었습니다", Toast.LENGTH_SHORT).show();
+        }
+        if (resultCode == Activity.RESULT_CANCELED) {
+            Toast.makeText(this, "취소되었습니다", Toast.LENGTH_SHORT).show();
+        }
+    }
+
+    private void listRefresh(){
+        cursor = db.rawQuery("SELECT * FROM TODOLIST ORDER BY date ASC", null);
+        dbAdapter.changeCursor(cursor);
+    }
 }

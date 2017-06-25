@@ -12,8 +12,14 @@ import android.widget.EditText;
 import android.widget.TimePicker;
 import android.widget.Toast;
 
-public class ModifiedActivity extends AppCompatActivity {
-    private String id;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
+import java.util.Calendar;
+
+public class ModifiedActivity extends AppCompatActivity  {
+    private String id, type, memo;
+    private Calendar date;
+    private SimpleDateFormat SDF = new SimpleDateFormat("yyyy-MM-dd hh:mm");
     private EditText modiMemo;
     private DatePicker datePicker;
     private TimePicker timePicker;
@@ -26,10 +32,30 @@ public class ModifiedActivity extends AppCompatActivity {
         getSupportActionBar().setTitle("");
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
 
+        try {
+            setComponents();
+        } catch (ParseException e) {
+            e.printStackTrace();
+        }
+    }
+
+    private void setComponents() throws ParseException{
         id = getIntent().getExtras().getString("id");
-        modiMemo = (EditText)findViewById(R.id.etModiMemo);
+        type = getIntent().getExtras().getString("type");
+        memo = getIntent().getExtras().getString("memo");
+
+        date = Calendar.getInstance();
+        date.setTime(SDF.parse(getIntent().getExtras().getString("date")));
+
         datePicker = (DatePicker)findViewById(R.id.datePicker);
+        datePicker.setMinDate(System.currentTimeMillis() - 1000);
         timePicker = (TimePicker)findViewById(R.id.timePicker);
+        modiMemo = (EditText)findViewById(R.id.etModiMemo);
+
+        datePicker.updateDate(date.get(Calendar.YEAR), date.get(Calendar.MONTH), date.get(Calendar.DATE));
+        timePicker.setCurrentHour(date.get(Calendar.HOUR));
+        timePicker.setCurrentMinute(date.get(Calendar.MINUTE));
+        modiMemo.setText(memo);
     }
 
     @Override
@@ -42,23 +68,20 @@ public class ModifiedActivity extends AppCompatActivity {
     public boolean onOptionsItemSelected(MenuItem item) {
         int itemId = item.getItemId();
 
-        if (itemId == android.R.id.home){
-            Toast.makeText(this, "수정 취소", Toast.LENGTH_SHORT).show();
+        if (itemId == android.R.id.home){   //수정 취소
             finish();
             return true;
         }
 
-        if (itemId == R.id.btnSave) {
-            //저장저장...
-            //EditText editText = (EditText) findViewById(R.id.edit_message);
-            //String message = editText.getText().toString();
-            //intent.putExtra(EXTRA_MESSAGE, message);
+        if (itemId == R.id.btnSave) {   //저장
+            date.set(datePicker.getYear(), datePicker.getMonth(), datePicker.getDayOfMonth(), timePicker.getCurrentHour(), timePicker.getCurrentMinute());
+            Intent intent = getIntent();
+            intent.putExtra("id", id);
+            intent.putExtra("type", "16");
+            intent.putExtra("date", SDF.format(date.getTime()));
+            intent.putExtra("memo", modiMemo.getText().toString());
+            setResult(RESULT_OK,intent);
 
-            //db.execSQL("UPDATE TODOLIST SET type 0, date TEXT, memo TEXT WHERE _id = "+id+";");
-
-
-
-            Toast.makeText(this, "저장되었습니다", Toast.LENGTH_SHORT).show();
             finish();
             return true;
         }

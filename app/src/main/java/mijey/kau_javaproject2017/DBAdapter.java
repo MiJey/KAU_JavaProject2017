@@ -28,7 +28,7 @@ public class DBAdapter extends CursorAdapter {
             NLP msg = new NLP(cursor.getInt(cursor.getColumnIndex("type")),
                               cursor.getString(cursor.getColumnIndex("date")),
                               cursor.getString(cursor.getColumnIndex("memo")));
-            tvMemo.setText(msg.getNaturalDate() + " " + msg.getMemo());
+            tvMemo.setText(msg.getNaturalDate() + msg.getMemo());
             tvDate.setText(msg.getDate());
 
         }catch(ParseException e){
