@@ -94,7 +94,7 @@ public class MainActivity extends AppCompatActivity {
     void readDB() {
         dbHelper = new DBHelper(getApplicationContext(), "TODOLIST.db", null, 1);
         db = dbHelper.getWritableDatabase();
-        cursor = db.rawQuery("SELECT * FROM TODOLIST ORDER BY date, type ASC", null);
+        cursor = db.rawQuery("SELECT * FROM TODOLIST ORDER BY type, date ASC", null);
         dbAdapter = new DBAdapter(this, cursor);
         todoList.setAdapter(dbAdapter);
     }
@@ -130,7 +130,7 @@ public class MainActivity extends AppCompatActivity {
     }
 
     private void listRefresh(){
-        cursor = db.rawQuery("SELECT * FROM TODOLIST ORDER BY date, type ASC", null);
+        cursor = db.rawQuery("SELECT * FROM TODOLIST ORDER BY type, date ASC", null);
         dbAdapter.changeCursor(cursor);
     }
 }

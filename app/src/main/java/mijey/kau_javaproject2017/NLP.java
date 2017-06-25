@@ -58,15 +58,16 @@ public class NLP {
 
         if (dif < -1) return "[삭제] ";
         if (dif == -1) return "어제까지 ";
-        else if (dif == 0) return "오늘까지 ";
-        else if (dif == 1) return "내일까지 ";
-        else if (dif == 2) return "모레까지 ";
+        if (dif == 0) return "오늘까지 ";
+        if (dif == 1) return "내일까지 ";
+        if (dif == 2) return "모레까지 ";
 
+        int nowdow = now.get(Calendar.DAY_OF_WEEK);
         int dow = date.get(Calendar.DAY_OF_WEEK);
-        if (dif <= 7 - dow) return "이번 주 " + DayOfWeek(dow) + "까지 ";
-        if (dif <= 14 - dow) return "다음 주 " + DayOfWeek(dow) + "까지 ";
+        if (dif < 7 && nowdow < dow) return "이번 주 " + DayOfWeek(dow) + "까지 ";
+        if ((dif < 7 && dow < nowdow) || (dif < 14 && nowdow < dow)) return "다음 주 " + DayOfWeek(dow) + "까지 ";
 
-        String nl = date.get(Calendar.MONTH) + "월 " + date.get(Calendar.DATE) + "일까지 ";
+        String nl = (date.get(Calendar.MONTH) + 1) + "월 " + date.get(Calendar.DATE) + "일까지 ";
         if (now.get(Calendar.YEAR) != date.get(Calendar.YEAR)) nl = date.get(Calendar.YEAR) + "년 ";
         return nl;
     }
