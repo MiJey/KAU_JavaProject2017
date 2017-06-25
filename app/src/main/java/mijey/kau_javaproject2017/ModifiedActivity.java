@@ -1,14 +1,21 @@
 package mijey.kau_javaproject2017;
 
+import android.app.DatePickerDialog;
+import android.app.TimePickerDialog;
 import android.content.ContentValues;
+import android.content.Context;
 import android.content.Intent;
 import android.database.sqlite.SQLiteDatabase;
+import android.os.Build;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.support.v7.view.ContextThemeWrapper;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.view.View;
 import android.widget.DatePicker;
 import android.widget.EditText;
+import android.widget.TextView;
 import android.widget.TimePicker;
 import android.widget.Toast;
 
@@ -20,6 +27,7 @@ public class ModifiedActivity extends AppCompatActivity  {
     private String id, type, memo;
     private Calendar date;
     private SimpleDateFormat SDF = new SimpleDateFormat("yyyy-MM-dd hh:mm");
+    private TextView tvPickDate, tvPickTime;
     private EditText modiMemo;
     private DatePicker datePicker;
     private TimePicker timePicker;
@@ -32,30 +40,34 @@ public class ModifiedActivity extends AppCompatActivity  {
         getSupportActionBar().setTitle("");
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
 
+        tvPickDate = (TextView)findViewById(R.id.tvPickDate);
+        tvPickTime = (TextView)findViewById(R.id.tvPickTime);
+        modiMemo = (EditText)findViewById(R.id.etModiMemo);
+
         try {
-            setComponents();
+            id = getIntent().getExtras().getString("id");
+            type = getIntent().getExtras().getString("type");
+            memo = getIntent().getExtras().getString("memo");
+            date = Calendar.getInstance();
+            date.setTime(SDF.parse(getIntent().getExtras().getString("date")));
+
+            setTvPickDate();
+            setTvPickTime();
+            modiMemo.setText(memo);
         } catch (ParseException e) {
             e.printStackTrace();
         }
     }
 
-    private void setComponents() throws ParseException{
-        id = getIntent().getExtras().getString("id");
-        type = getIntent().getExtras().getString("type");
-        memo = getIntent().getExtras().getString("memo");
+    private void setTvPickDate(){
+        tvPickDate.setText(date.get(Calendar.YEAR) + "년 " + (date.get(Calendar.MONTH) + 1) + "월 " + date.get(Calendar.DATE) + "일");
+    }
 
-        date = Calendar.getInstance();
-        date.setTime(SDF.parse(getIntent().getExtras().getString("date")));
-
-        datePicker = (DatePicker)findViewById(R.id.datePicker);
-        //datePicker.setMinDate(System.currentTimeMillis() - 1000);
-        timePicker = (TimePicker)findViewById(R.id.timePicker);
-        modiMemo = (EditText)findViewById(R.id.etModiMemo);
-
-        datePicker.updateDate(date.get(Calendar.YEAR), date.get(Calendar.MONTH), date.get(Calendar.DATE));
-        timePicker.setCurrentHour(date.get(Calendar.HOUR));
-        timePicker.setCurrentMinute(date.get(Calendar.MINUTE));
-        modiMemo.setText(memo);
+    private void setTvPickTime(){
+        String ap = "";
+        if((int)date.get(Calendar.AM_PM) == Calendar.AM) ap = "오전 ";
+        else ap = "오후 ";
+        tvPickTime.setText(ap + date.get(Calendar.HOUR) + "시 " + date.get(Calendar.MINUTE) + "분");
     }
 
     @Override
@@ -76,10 +88,9 @@ public class ModifiedActivity extends AppCompatActivity  {
         if (itemId == R.id.btnSave) {   //저장
             if(modiMemo.getText().toString().equals("")){
                 Toast.makeText(this, "메모를 입력해주세요", Toast.LENGTH_SHORT).show();
-              //  return false;
+                return true;
             }
 
-            date.set(datePicker.getYear(), datePicker.getMonth(), datePicker.getDayOfMonth(), timePicker.getCurrentHour(), timePicker.getCurrentMinute());
             Intent intent = getIntent();
             intent.putExtra("id", id);
             intent.putExtra("type", "0");
@@ -93,4 +104,30 @@ public class ModifiedActivity extends AppCompatActivity  {
 
         return super.onOptionsItemSelected(item);
     }
+
+    public void showDatePicker(View view) {
+        DatePickerDialog datePickerDialog = new DatePickerDialog(this, dateSetListener, date.get(Calendar.YEAR), date.get(Calendar.MONTH), date.get(Calendar.DATE));
+        datePickerDialog.show();
+    }
+
+    public void showTimePicker(View view) {
+        TimePickerDialog dialog = new TimePickerDialog(this, timeSetListener, date.get(Calendar.HOUR), date.get(Calendar.MINUTE), false);
+        dialog.show();
+    }
+
+    private DatePickerDialog.OnDateSetListener dateSetListener = new DatePickerDialog.OnDateSetListener() {
+        @Override
+        public void onDateSet(DatePicker view, int y, int m, int d) {
+            date.set(y, m, d);
+            setTvPickDate();
+        }
+    };
+    private TimePickerDialog.OnTimeSetListener timeSetListener = new TimePickerDialog.OnTimeSetListener() {
+        @Override
+        public void onTimeSet(TimePicker view, int h, int m) {
+            date.set(Calendar.HOUR, h);
+            date.set(Calendar.MINUTE, m);
+            setTvPickTime();;
+        }
+    };
 }
