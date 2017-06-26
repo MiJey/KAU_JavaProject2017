@@ -55,6 +55,11 @@ public class ModifiedActivity extends AppCompatActivity  {
             date = Calendar.getInstance();
             date.setTime(SDF.parse(getIntent().getExtras().getString("date")));
 
+            if(type.equals("1")){
+                switchMemo.setChecked(true);
+                tvPickDate.setVisibility(View.GONE);
+                tvPickTime.setVisibility(View.GONE);
+            }
             setTvPickDate();
             setTvPickTime();
             modiMemo.setText(memo);
@@ -131,7 +136,9 @@ public class ModifiedActivity extends AppCompatActivity  {
     }
 
     public void showDatePicker(View view) {
+        Calendar now = Calendar.getInstance();
         DatePickerDialog datePickerDialog = new DatePickerDialog(this, dateSetListener, date.get(Calendar.YEAR), date.get(Calendar.MONTH), date.get(Calendar.DATE));
+        datePickerDialog.getDatePicker().setMinDate(now.getTimeInMillis() - 1000);
         datePickerDialog.show();
     }
 
