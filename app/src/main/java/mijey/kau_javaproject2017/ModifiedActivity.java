@@ -86,10 +86,7 @@ public class ModifiedActivity extends AppCompatActivity  {
     }
 
     private void setTvPickTime(){
-        String ap = "";
-        if((int)date.get(Calendar.AM_PM) == Calendar.AM) ap = "오전 ";
-        else ap = "오후 ";
-        tvPickTime.setText(ap + date.get(Calendar.HOUR) + "시 " + date.get(Calendar.MINUTE) + "분");
+        tvPickTime.setText(date.get(Calendar.HOUR_OF_DAY) + "시 " + date.get(Calendar.MINUTE) + "분");
     }
 
     @Override
@@ -143,7 +140,7 @@ public class ModifiedActivity extends AppCompatActivity  {
     }
 
     public void showTimePicker(View view) {
-        TimePickerDialog dialog = new TimePickerDialog(this, timeSetListener, date.get(Calendar.HOUR), date.get(Calendar.MINUTE), false);
+        TimePickerDialog dialog = new TimePickerDialog(this, timeSetListener, date.get(Calendar.HOUR_OF_DAY), date.get(Calendar.MINUTE), true);
         dialog.show();
     }
 
@@ -157,7 +154,7 @@ public class ModifiedActivity extends AppCompatActivity  {
     private TimePickerDialog.OnTimeSetListener timeSetListener = new TimePickerDialog.OnTimeSetListener() {
         @Override
         public void onTimeSet(TimePicker view, int h, int m) {
-            date.set(Calendar.HOUR, h);
+            date.set(Calendar.HOUR_OF_DAY, h);
             date.set(Calendar.MINUTE, m);
             setTvPickTime();;
         }
