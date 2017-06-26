@@ -28,7 +28,7 @@ import java.util.Calendar;
 public class ModifiedActivity extends AppCompatActivity  {
     private String id, type, memo;
     private Calendar date;
-    private SimpleDateFormat SDF = new SimpleDateFormat("yyyy-MM-dd hh:mm");
+    private SimpleDateFormat SDF = new SimpleDateFormat("yyyy-MM-dd HH:mm");
     private TextView tvPickDate, tvPickTime;
     private EditText modiMemo;
     private Switch switchMemo;
