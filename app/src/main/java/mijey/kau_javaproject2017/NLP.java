@@ -11,6 +11,7 @@ public class NLP {
     private Calendar date;
     private String memo;
     private SimpleDateFormat SDF = new SimpleDateFormat("yyyy-MM-dd hh:mm");
+    final String[] week = {"", "일요일", "월요일", "화요일", "수요일", "목요일", "금요일", "토요일"};
 
     //EditText --> DB
     public NLP(String msg){
@@ -33,8 +34,29 @@ public class NLP {
                 date.add(Calendar.DATE, 2);
                 return;
             }
-
-            //다음주
+            if(d.contains("이번주")){
+                for(int i = 1; i <= 7; i++){
+                    if(d.contains(week[i])){
+                        int dow = date.get(Calendar.DAY_OF_WEEK);
+                        if(i - dow < 0){
+                            type = MEMO;
+                            memo = msg;
+                            return;
+                        }
+                        date.add(Calendar.DATE, i - dow);
+                        return;
+                    }
+                }
+            }
+            if(d.contains("다음주")){
+                for(int i = 1; i <= 7; i++){
+                    if(d.contains(week[i])){
+                        int dow = date.get(Calendar.DAY_OF_WEEK);
+                        date.add(Calendar.DATE, i + 7 - dow);
+                        return;
+                    }
+                }
+            }
         }
 
         //메모
@@ -64,8 +86,8 @@ public class NLP {
 
         int nowdow = now.get(Calendar.DAY_OF_WEEK);
         int dow = date.get(Calendar.DAY_OF_WEEK);
-        if (dif < 7 && nowdow < dow) return "이번 주 " + DayOfWeek(dow) + "까지 ";
-        if ((dif < 7 && dow < nowdow) || (dif < 14 && nowdow < dow)) return "다음 주 " + DayOfWeek(dow) + "까지 ";
+        if (dif < 7 && nowdow < dow) return "이번 주 " + week[dow] + "까지 ";
+        if ((dif < 7 && dow < nowdow) || (dif < 14 && nowdow < dow)) return "다음 주 " + week[dow] + "까지 ";
 
         String nl = (date.get(Calendar.MONTH) + 1) + "월 " + date.get(Calendar.DATE) + "일까지 ";
         if (now.get(Calendar.YEAR) != date.get(Calendar.YEAR)) nl = date.get(Calendar.YEAR) + "년 ";
@@ -75,11 +97,6 @@ public class NLP {
     public int getType(){return type;}
     public String getDate(){return SDF.format(date.getTime());}
     public String getMemo(){return memo;}
-
-    private String DayOfWeek(int d){
-        final String[] week = {"", "일", "월", "화", "수", "목", "금", "토"};
-        return week[d] + "요일";
-    }
 
     private long differenceOfDays(Calendar d1, Calendar d2){
         Calendar start = Calendar.getInstance();
