@@ -13,8 +13,10 @@ import android.support.v7.view.ContextThemeWrapper;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
+import android.widget.CompoundButton;
 import android.widget.DatePicker;
 import android.widget.EditText;
+import android.widget.Switch;
 import android.widget.TextView;
 import android.widget.TimePicker;
 import android.widget.Toast;
@@ -29,6 +31,7 @@ public class ModifiedActivity extends AppCompatActivity  {
     private SimpleDateFormat SDF = new SimpleDateFormat("yyyy-MM-dd hh:mm");
     private TextView tvPickDate, tvPickTime;
     private EditText modiMemo;
+    private Switch switchMemo;
     private DatePicker datePicker;
     private TimePicker timePicker;
 
@@ -40,6 +43,7 @@ public class ModifiedActivity extends AppCompatActivity  {
         getSupportActionBar().setTitle("");
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
 
+        switchMemo = (Switch)findViewById(R.id.switchMemo);
         tvPickDate = (TextView)findViewById(R.id.tvPickDate);
         tvPickTime = (TextView)findViewById(R.id.tvPickTime);
         modiMemo = (EditText)findViewById(R.id.etModiMemo);
@@ -57,6 +61,19 @@ public class ModifiedActivity extends AppCompatActivity  {
         } catch (ParseException e) {
             e.printStackTrace();
         }
+
+        switchMemo.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
+            @Override
+            public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
+                if (isChecked == true){
+                    tvPickDate.setVisibility(View.GONE);
+                    tvPickTime.setVisibility(View.GONE);
+                } else {
+                    tvPickDate.setVisibility(View.VISIBLE);
+                    tvPickTime.setVisibility(View.VISIBLE);
+                }
+            }
+        });
     }
 
     private void setTvPickDate(){
@@ -93,8 +110,16 @@ public class ModifiedActivity extends AppCompatActivity  {
 
             Intent intent = getIntent();
             intent.putExtra("id", id);
-            intent.putExtra("type", "0");
-            intent.putExtra("date", SDF.format(date.getTime()));
+
+            if(switchMemo.isChecked()){
+                intent.putExtra("type", "1");
+                date = Calendar.getInstance();
+                intent.putExtra("date", SDF.format(date.getTime()));
+            }else{
+                intent.putExtra("type", "0");
+                intent.putExtra("date", SDF.format(date.getTime()));
+            }
+
             intent.putExtra("memo", modiMemo.getText().toString());
             setResult(RESULT_OK,intent);
 

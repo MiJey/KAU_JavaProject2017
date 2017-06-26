@@ -65,7 +65,7 @@ public class MainActivity extends AppCompatActivity {
                                 String m = cursor.getString(cursor.getColumnIndex("memo"));
                                 db.execSQL("DELETE FROM TODOLIST WHERE _id = " + id);
                                 listRefresh();
-                                Toast.makeText(getApplicationContext(), m + "이(가) 삭제되었습니다" + id, Toast.LENGTH_SHORT).show();
+                                Toast.makeText(getApplicationContext(), m + "이(가) 삭제되었습니다", Toast.LENGTH_SHORT).show();
                                 break;
                             default:
                                 break;

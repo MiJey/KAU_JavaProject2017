@@ -32,10 +32,8 @@ public class DBAdapter extends CursorAdapter {
             tvDate.setText(msg.getDate());
 
         }catch(ParseException e){
-            tvMemo.setText("문제가 발생했다!");
-            tvDate.setText("여기도!");
+            e.printStackTrace();
         }
-
     }
 
     @Override
